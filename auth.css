@@ -1,0 +1,94 @@
+:root {
+    --primary-color: #8BC34A;
+    --error-color: #ff4444;
+}
+
+body {
+    font-family: 'Microsoft YaHei', sans-serif;
+    background: #f5f5f5;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}
+
+.auth-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 30px;
+}
+
+.logo {
+    text-align: center;
+    color: var(--primary-color);
+    margin: 0 0 30px;
+    font-size: 2em;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+.auth-btn {
+    background: var(--primary-color);
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+
+.auth-btn:hover {
+    opacity: 0.9;
+}
+
+.auth-links {
+    text-align: center;
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.auth-links a {
+    color: #666;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.auth-links a:hover {
+    color: var(--primary-color);
+}
+
+.response-message {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 14px;
+}

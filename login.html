@@ -3,69 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>用户登录</title>
-    <style>
-        body {
-            font-family: 'Microsoft YaHei', sans-serif;
-            background: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .login-container {
-            background: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            width: 350px;
-        }
-
-        .form-title {
-            text-align: center;
-            color: #2d3436;
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        input {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        button {
-            width: 100%;
-            padding: 0.8rem;
-            background: #1890ff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .links {
-            text-align: center;
-            margin-top: 1rem;
-        }
-
-        .links a {
-            color: #1890ff;
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-    </style>
+    <title>登录 - 味知镜头</title>
+    <link rel="stylesheet" href="auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
+    <!-- 添加浮动元素容器 -->
+    <div class="floating-elements" id="floatingElements"></div>
+
     <div class="login-container">
-        <h2 class="form-title">用户登录</h2>
+        <div class="brand-logo">
+            <img src="image/logo.jpg" alt="味知镜头">
+            <h1 class="brand-name">味知镜头</h1>
+            <p style="color: #666; margin-top: 0;">发现美食，记录生活</p>
+        </div>
+        
         <form id="loginForm" onsubmit="return handleLogin(event)">
             <div class="form-group">
                 <input type="text" id="username" placeholder="用户名/手机号" required>
@@ -73,37 +25,74 @@
             <div class="form-group">
                 <input type="password" id="password" placeholder="密码" required>
             </div>
-            <button type="submit">登录</button>
+            <button type="submit">登 录</button>
         </form>
+        
         <div class="links">
-            <a href="forgot_password.html">忘记密码?</a>
-            <span style="margin:0 10px">|</span>
+            <a href="forgot_password.html">忘记密码</a>
+            <span style="color: #ddd">|</span>
             <a href="register.html">注册新账号</a>
         </div>
-        <div id="message" style="color:#ff4d4f; margin-top:1rem;"></div>
+        
+        <div id="message" class="message"></div>
     </div>
 
     <script>
+        // 添加浮动元素生成脚本
+        function createFloatingElements() {
+            const container = document.getElementById('floatingElements');
+            const icons = ['🍜', '🍖', '🍚', '🍣', '🍙', '🍱', '🥘', '🥗'];
+            const numElements = 20;
+
+            for (let i = 0; i < numElements; i++) {
+                const element = document.createElement('div');
+                element.className = 'floating-element';
+                element.textContent = icons[Math.floor(Math.random() * icons.length)];
+                element.style.fontSize = Math.random() * 20 + 20 + 'px';
+                element.style.left = Math.random() * 100 + 'vw';
+                element.style.top = Math.random() * 100 + 'vh';
+                element.style.setProperty('--tx', (Math.random() * 200 - 100) + 'vw');
+                element.style.setProperty('--ty', (Math.random() * 200 - 100) + 'vh');
+                element.style.animationDelay = Math.random() * 20 + 's';
+                element.style.animationDuration = (Math.random() * 20 + 20) + 's';
+                container.appendChild(element);
+            }
+        }
+
+        // 页面加载时创建浮动元素
+        document.addEventListener('DOMContentLoaded', createFloatingElements);
+
         async function handleLogin(event) {
             event.preventDefault();
+            const messageDiv = document.getElementById('message');
             
-            const response = await fetch('/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    username: document.getElementById('username').value,
-                    password: document.getElementById('password').value
-                })
-            });
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: document.getElementById('username').value,
+                        password: document.getElementById('password').value
+                    })
+                });
 
-            const result = await response.json();
-            
-            if(result.code === 1) {
-                window.location.href = 'menu.html';
-            } else {
-                document.getElementById('message').textContent = result.msg;
+                const result = await response.json();
+                
+                if(result.code === 1) {
+                    messageDiv.className = 'message success-message';
+                    messageDiv.textContent = '登录成功，正在跳转...';
+                    setTimeout(() => {
+                        window.location.href = 'menu.html';
+                    }, 1000);
+                } else {
+                    messageDiv.className = 'message error-message';
+                    messageDiv.textContent = result.msg;
+                }
+            } catch (error) {
+                messageDiv.className = 'message error-message';
+                messageDiv.textContent = '网络错误，请稍后重试';
             }
         }
     </script>

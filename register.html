@@ -3,62 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>用户注册</title>
-    <link rel="stylesheet" href="auth.css"> <!-- 共用登录页面样式 -->
+    <title>注册 - 味知镜头</title>
+    <link rel="stylesheet" href="auth.css">
 </head>
 <body>
     <div class="login-container">
-        <h2 class="form-title">新用户注册</h2>
+        <div class="brand-logo">
+            <img src="logo.png" alt="味知镜头">
+            <h1 class="brand-name">味知镜头</h1>
+            <p style="color: #666; margin-top: 0;">加入我们，开启美食之旅</p>
+        </div>
+
         <form id="registerForm" onsubmit="return handleRegister(event)">
             <div class="form-group">
-                <input type="text" id="regUsername" placeholder="用户名" required>
+                <input type="text" id="regUsername" placeholder="设置用户名" required>
             </div>
             <div class="form-group">
                 <input type="email" id="email" placeholder="电子邮箱" required>
             </div>
             <div class="form-group">
-                <input type="password" id="regPassword" placeholder="密码" required>
+                <input type="password" id="regPassword" placeholder="设置密码" required>
             </div>
             <div class="form-group">
                 <input type="password" id="confirmPassword" placeholder="确认密码" required>
             </div>
-            <button type="submit">立即注册</button>
+            <button type="submit">注 册</button>
         </form>
+
         <div class="links">
-            <a href="login.html">已有账号? 立即登录</a>
+            <a href="login.html">已有账号？立即登录</a>
         </div>
-        <div id="regMessage" style="color:#ff4d4f; margin-top:1rem;"></div>
+
+        <div id="regMessage" class="message"></div>
     </div>
 
     <script>
         async function handleRegister(event) {
             event.preventDefault();
+            const messageDiv = document.getElementById('regMessage');
             
             if(document.getElementById('regPassword').value !== 
                document.getElementById('confirmPassword').value) {
-                document.getElementById('regMessage').textContent = "两次密码输入不一致";
+                messageDiv.className = 'message error-message';
+                messageDiv.textContent = "两次密码输入不一致";
                 return;
             }
 
-            const response = await fetch('/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    username: document.getElementById('regUsername').value,
-                    email: document.getElementById('email').value,
-                    password: document.getElementById('regPassword').value
-                })
-            });
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: document.getElementById('regUsername').value,
+                        email: document.getElementById('email').value,
+                        password: document.getElementById('regPassword').value
+                    })
+                });
 
-            const result = await response.json();
-            
-            if(result.code === 1) {
-                alert(result.msg);
-                window.location.href = 'login.html';
-            } else {
-                document.getElementById('regMessage').textContent = result.msg;
+                const result = await response.json();
+                
+                if(result.code === 1) {
+                    messageDiv.className = 'message success-message';
+                    messageDiv.textContent = '注册成功，正在跳转到登录页面...';
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 1500);
+                } else {
+                    messageDiv.className = 'message error-message';
+                    messageDiv.textContent = result.msg;
+                }
+            } catch (error) {
+                messageDiv.className = 'message error-message';
+                messageDiv.textContent = '注册失败，请稍后重试';
             }
         }
     </script>

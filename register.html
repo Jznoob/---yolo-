@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户注册</title>
+    <link rel="stylesheet" href="auth.css"> <!-- 共用登录页面样式 -->
+</head>
+<body>
+    <div class="login-container">
+        <h2 class="form-title">新用户注册</h2>
+        <form id="registerForm" onsubmit="return handleRegister(event)">
+            <div class="form-group">
+                <input type="text" id="regUsername" placeholder="用户名" required>
+            </div>
+            <div class="form-group">
+                <input type="email" id="email" placeholder="电子邮箱" required>
+            </div>
+            <div class="form-group">
+                <input type="password" id="regPassword" placeholder="密码" required>
+            </div>
+            <div class="form-group">
+                <input type="password" id="confirmPassword" placeholder="确认密码" required>
+            </div>
+            <button type="submit">立即注册</button>
+        </form>
+        <div class="links">
+            <a href="login.html">已有账号? 立即登录</a>
+        </div>
+        <div id="regMessage" style="color:#ff4d4f; margin-top:1rem;"></div>
+    </div>
+
+    <script>
+        async function handleRegister(event) {
+            event.preventDefault();
+            
+            if(document.getElementById('regPassword').value !== 
+               document.getElementById('confirmPassword').value) {
+                document.getElementById('regMessage').textContent = "两次密码输入不一致";
+                return;
+            }
+
+            const response = await fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: document.getElementById('regUsername').value,
+                    email: document.getElementById('email').value,
+                    password: document.getElementById('regPassword').value
+                })
+            });
+
+            const result = await response.json();
+            
+            if(result.code === 1) {
+                alert(result.msg);
+                window.location.href = 'login.html';
+            } else {
+                document.getElementById('regMessage').textContent = result.msg;
+            }
+        }
+    </script>
+</body>
+</html>

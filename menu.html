@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>食谱推荐系统</title>
+    <link rel="stylesheet" href="menu.css">
+</head>
+<body>
+    <header class="main-header">
+        <h1 class="logo">味知镜头</h1>
+        <nav class="main-nav">
+            <ul class="nav-list">
+                <li><a href="recommend.html" class="nav-item active" data-target="recommend">食谱推荐</a></li>
+                <li><a href="my_recipe.html" class="nav-item" data-target="my_recipe">我的菜单</a></li>
+                <li><a href="daily_record.html" class="nav-item" data-target="daily_record">每日记录</a></li>
+                <li><a href="my_account.html" class="nav-item" data-target="my_account">个人中心</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="content-container" id="main-content">
+        <!-- 默认加载推荐页面 -->
+        <iframe src="recommend.html" frameborder="0" class="content-frame active" id="recommend"></iframe>
+        <iframe src="my_recipe.html" frameborder="0" class="content-frame" id="my_recipe"></iframe>
+        <iframe src="daily_record.html" frameborder="0" class="content-frame" id="daily_record"></iframe>
+        <iframe src="my_account.html" frameborder="0" class="content-frame" id="my_account"></iframe>
+    </main>
+
+    <script src="menu.js"></script>
+</body>
+</html>

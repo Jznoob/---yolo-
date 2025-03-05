@@ -1,0 +1,129 @@
+/* my_account.css */
+:root {
+    --primary-color: #4CAF50;
+    --secondary-color: #45a049;
+    --error-color: #f44336;
+    --background: #f5f5f5;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: var(--background);
+}
+
+.account-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 250px;
+    background: white;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.user-profile {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
+.nav-menu {
+    list-style: none;
+    padding: 0;
+}
+
+.nav-menu li {
+    padding: 12px 20px;
+    margin: 8px 0;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.nav-menu li:hover,
+.nav-menu li.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.content-area {
+    flex: 1;
+    padding: 30px;
+}
+
+.content-section {
+    display: none;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.content-section.active {
+    display: block;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.form-actions {
+    margin-top: 25px;
+    display: flex;
+    gap: 15px;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background: var(--primary-color);
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background: var(--secondary-color);
+}
+
+.error-msg {
+    color: var(--error-color);
+    margin-top: 10px;
+    display: none;
+}
+
+.account-list {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+/* 添加响应式设计 */
+@media (max-width: 768px) {
+    .account-container {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+        padding: 10px;
+    }
+}

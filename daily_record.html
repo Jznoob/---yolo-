@@ -1,0 +1,60 @@
+<!-- daily_record.html -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每日记录</title>
+    <link rel="stylesheet" href="daily_record.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="page-title">每日饮食记录</h1>
+        
+        <!-- 日期选择 -->
+        <div class="date-selector">
+            <input type="date" id="recordDate" class="date-picker">
+        </div>
+
+        <!-- 当日菜单 -->
+        <div class="section">
+            <h2>当日菜单</h2>
+            <div id="dailyMenu" class="menu-list"></div>
+        </div>
+
+        <!-- 营养分析 -->
+        <div class="section">
+            <h2>营养分析</h2>
+            <div class="analysis-grid">
+                <div class="chart-container">
+                    <canvas id="nutritionChart"></canvas>
+                </div>
+                <div class="stats-container">
+                    <div class="stat-item">
+                        <span class="stat-label">总热量</span>
+                        <span class="stat-value" id="totalCalories">0</span>
+                        <span class="stat-unit">kcal</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">蛋白质</span>
+                        <span class="stat-value" id="totalProtein">0</span>
+                        <span class="stat-unit">g</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">碳水化合物</span>
+                        <span class="stat-value" id="totalCarbs">0</span>
+                        <span class="stat-unit">g</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">脂肪</span>
+                        <span class="stat-value" id="totalFat">0</span>
+                        <span class="stat-unit">g</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="daily_record.js"></script>
+</body>
+</html>

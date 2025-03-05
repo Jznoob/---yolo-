@@ -1,0 +1,84 @@
+<!-- my_account.html -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>账号管理</title>
+    <link rel="stylesheet" href="my_account.css">
+</head>
+<body>
+    <div class="account-container">
+        <!-- 侧边栏导航 -->
+        <nav class="sidebar">
+            <div class="user-profile">
+                <img src="default-avatar.png" alt="用户头像" class="avatar">
+                <h3 id="username">当前用户</h3>
+            </div>
+            <ul class="nav-menu">
+                <li class="active" data-target="change-pwd">修改密码</li>
+                <li data-target="switch-account">切换账号</li>
+                <li data-target="login-history">登录记录</li>
+                <li onclick="logout()">退出登录</li>
+            </ul>
+        </nav>
+
+        <!-- 内容区域 -->
+        <main class="content-area">
+            <!-- 修改密码模块 -->
+            <section id="change-pwd" class="content-section active">
+                <h2>修改密码</h2>
+                <form id="pwd-form" onsubmit="return changePassword()">
+                    <div class="form-group">
+                        <label>旧密码</label>
+                        <input type="password" id="old-pwd" required>
+                    </div>
+                    <div class="form-group">
+                        <label>新密码</label>
+                        <input type="password" id="new-pwd" pattern=".{8,}" required>
+                        <small>至少8个字符</small>
+                    </div>
+                    <div class="form-group">
+                        <label>确认新密码</label>
+                        <input type="password" id="confirm-pwd" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit">提交修改</button>
+                        <button type="button" onclick="clearForm()">重置</button>
+                    </div>
+                    <div id="pwd-error" class="error-msg"></div>
+                </form>
+            </section>
+
+            <!-- 切换账号模块 -->
+            <section id="switch-account" class="content-section">
+                <h2>切换账号</h2>
+                <div class="account-list">
+                    <!-- 动态加载已登录账号 -->
+                </div>
+                <button class="add-account" onclick="showLogin()">
+                    <span>+</span> 添加新账号
+                </button>
+            </section>
+
+            <!-- 登录记录模块 -->
+            <section id="login-history" class="content-section">
+                <h2>最近登录记录</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>时间</th>
+                            <th>设备</th>
+                            <th>地点</th>
+                        </tr>
+                    </thead>
+                    <tbody id="login-records">
+                        <!-- 动态加载记录 -->
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+    <script src="my_account.js"></script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>食谱推荐</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #ff6347;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding: 20px 0;
+            background-color: #fff;
+        }
+        .carousel img {
+            scroll-snap-align: start;
+            margin-right: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .upload-section {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .upload-section input {
+            display: none;
+        }
+        .upload-section label {
+            background-color: #ff6347;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .upload-section label:hover {
+            background-color: #ff4500;
+        }
+        .recommendations {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin: 10px;
+            width: 200px;
+            text-align: center;
+            padding: 10px;
+        }
+        .card img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        .card h3 {
+            margin: 10px 0;
+        }
+        .card p {
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>食谱推荐</h1>
+    </header>
+
+    <div class="carousel">
+        <img src="https://via.placeholder.com/300x200" alt="菜品1">
+        <img src="https://via.placeholder.com/300x200" alt="菜品2">
+        <img src="https://via.placeholder.com/300x200" alt="菜品3">
+        <img src="https://via.placeholder.com/300x200" alt="菜品4">
+    </div><!-- 在<head>中添加Swiper样式 -->
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+
+<!-- 轮播图部分 -->
+<div class="swiper-container">
+    <div class="swiper-wrapper">
+        <!-- 单个轮播项 -->
+        <div class="swiper-slide">
+            <img src="推荐菜品1.jpg" alt="番茄炒蛋" class="carousel-img">
+            <div class="carousel-caption">
+                <h3>人气爆款·番茄炒蛋</h3>
+                <p>点击查看创意做法</p>
+            </div>
+        </div>
+        <div class="swiper-slide">
+            <img src="推荐菜品2.jpg" alt="宫保鸡丁" class="carousel-img">
+            <div class="carousel-caption">
+                <h3>经典川菜·宫保鸡丁</h3>
+                <p>家常做法大公开</p>
+            </div>
+        </div>
+        <!-- 更多轮播项... -->
+    </div>
+    <!-- 分页器 -->
+    <div class="swiper-pagination"></div>
+    <!-- 导航按钮 -->
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+</div>
+
+<style>
+.swiper-container {
+    width: 100%;
+    height: 400px;
+    margin-top: 20px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.carousel-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.9);
+}
+
+.carousel-caption {
+    position: absolute;
+    bottom: 20%;
+    left: 10%;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+    color: white !important;
+    --swiper-navigation-size: 30px;
+}
+</style>
+
+<!-- 在<body>末尾添加初始化脚本 -->
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script>
+    const swiper = new Swiper('.swiper-container', {
+        loop: true,
+        autoplay: {
+            delay: 5000,
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+    });
+</script>
+
+
+    <div class="upload-section">
+        <input type="file" id="fileInput" accept="image/*" onchange="handleFileUpload(event)">
+        <label for="fileInput">上传图片或拍摄</label>
+    </div>
+
+    <div class="recommendations" id="recommendations">
+        <!-- 推荐菜品卡片将动态插入此处 -->
+    </div>
+
+    <script>
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = function() {
+                        // 调用YOLO模型分析食材
+                        analyzeIngredients(img);
+                    };
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function analyzeIngredients(img) {
+            // 模拟调用YOLO模型分析食材
+            const ingredients = ['番茄', '鸡蛋', '青椒']; // 假设分析结果
+            generateRecommendations(ingredients);
+        }
+
+        function generateRecommendations(ingredients) {
+            // 模拟调用API生成推荐菜品
+            const recommendations = [
+                { name: '番茄炒蛋', image: 'https://via.placeholder.com/200x150', description: '经典家常菜，酸甜可口。' },
+                { name: '青椒炒蛋', image: 'https://via.placeholder.com/200x150', description: '简单美味，营养丰富。' },
+                { name: '番茄青椒炒蛋', image: 'https://via.placeholder.com/200x150', description: '融合两种经典口味，色香味俱佳。' }
+            ];
+
+            const recommendationsDiv = document.getElementById('recommendations');
+            recommendationsDiv.innerHTML = '';
+
+            recommendations.forEach(recipe => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <img src="${recipe.image}" alt="${recipe.name}">
+                    <h3>${recipe.name}</h3>
+                    <p>${recipe.description}</p>
+                `;
+                recommendationsDiv.appendChild(card);
+            });
+        }
+    </script>
+</body>
+</html>

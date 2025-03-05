@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的菜单</title>
+    <link rel="stylesheet" href="my_recipe.css">
+</head>
+<body>
+    <div class="menu-container">
+        <!-- 搜索和推荐区域 -->
+        <div class="search-section">
+            <div class="search-bar">
+                <input type="text" id="recipeSearch" placeholder="输入菜谱名称或食材...">
+                <button onclick="searchRecipe()">搜索</button>
+            </div>
+            <div class="recommend-tip">今日推荐（基于您拍摄的食材）</div>
+        </div>
+
+        <!-- 推荐菜谱展示 -->
+        <div class="recommend-grid" id="recommendations"></div>
+
+        <!-- 个人菜单区域 -->
+        <div class="my-menu-section">
+            <h2>我的本天<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的菜单</title>
+    <style>
+        :root {
+            --primary-color: #8BC34A;
+            --secondary-color: #4CAF50;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 菜单操作区样式 */
+        .menu-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        #searchInput {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid var(--primary-color);
+            border-radius: 25px;
+            font-size: 16px;
+        }
+
+        .menu-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            margin: 10px 0;
+            background: #fff;
+            border-left: 5px solid var(--primary-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* 功能按钮组 */
+        .button-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .add-btn { background: var(--primary-color); color: white; }
+        .cancel-btn { background: #ff5722; color: white; }
+        .confirm-btn { background: #4CAF50; color: white; }
+
+        /* 推荐与营养分析区 */
+        .recommend-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .nutrition-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+        }
+
+        .share-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 菜单操作区 -->
+        <div class="menu-section">
+            <h2>我的菜单 🍴</h2>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜索菜谱...">
+                <button class="btn add-btn" onclick="searchRecipe()">搜索</button>
+            </div>
+            <ul class="menu-list" id="menuList">
+                <!-- 动态生成的菜单项 -->
+            </ul>
+        </div>
+
+        <!-- 推荐与功能扩展区 -->
+        <div class="recommend-section">
+            <h3>今日推荐 🌟</h3>
+            <div id="recommendations"></div>
+            <button class="btn confirm-btn" onclick="analyzeNutrition()">营养分析</button>
+            <div class="share-buttons">
+                <button class="btn add-btn" onclick="shareMenu()">📤 分享菜单</button>
+                <button class="btn confirm-btn" onclick="exportMenu()">📥 导出菜单</button>
+            </div>
+            <div id="nutritionInfo" class="nutrition-modal"></div>
+        </div>
+    </div>
+
+    <script>
+        // 初始化本地存储
+        let menuData = JSON.parse(localStorage.getItem('menu')) || [];
+
+        // 搜索功能实现
+        async function searchRecipe() {
+            const query = document.getElementById('searchInput').value;
+            // 此处应接入实际API
+            const mockData = [
+                { name: '番茄炒蛋', ingredients: ['番茄', '鸡蛋'] },
+                { name: '青椒肉丝', ingredients: ['青椒', '猪肉'] }
+            ];
+            
+            renderResults(mockData);
+        }
+
+        // 渲染搜索结果
+        function renderResults(results) {
+            const list = document.getElementById('menuList');
+            list.innerHTML = results.map(item => `
+                <li class="menu-item">
+                    <div>
+                        <h4>${item.name}</h4>
+                        <small>食材: ${item.ingredients.join(', ')}</small>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn add-btn" onclick="addToMenu('${item.name}')">添加</button>
+                    </div>
+                </li>
+            `).join('');
+        }
+
+        // 添加菜单功能
+        function addToMenu(recipeName) {
+            if (!menuData.includes(recipeName)) {
+                menuData.push(recipeName);
+                localStorage.setItem('menu', JSON.stringify(menuData));
+                updateMenuDisplay();
+            }
+        }
+
+        // 更新菜单显示
+        function updateMenuDisplay() {
+            const list = document.getElementById('menuList');
+            list.innerHTML = menuData.map(item => `
+                <li class="menu-item">
+                    <span>${item}</span>
+                    <div class="button-group">
+                        <button class="btn cancel-btn" onclick="removeItem('${item}')">取消</button>
+                        <button class="btn confirm-btn" onclick="confirmItem('${item}')">确定</button>
+                    </div>
+                </li>
+            `).join('');
+        }
+
+        // 营养分析功能
+        async function analyzeNutrition() {
+            // 此处应接入营养分析API
+            const nutritionData = {
+                calories: 450,
+                protein: '25g',
+                carbs: '35g',
+                fat: '18g'
+            };
+            
+            const modal = document.getElementById('nutritionInfo');
+            modal.innerHTML = `
+                <h3>营养分析 📊</h3>
+                <p>总热量: ${nutritionData.calories}kcal</p>
+                <p>蛋白质: ${nutritionData.protein}</p>
+                <p>碳水化合物: ${nutritionData.carbs}</p>
+                <p>脂肪: ${nutritionData.fat}</p>
+                <button class="btn" onclick="this.parentElement.style.display='none'">关闭</button>
+            `;
+            modal.style.display = 'block';
+        }
+
+        // 分享功能
+        function shareMenu() {
+            const shareContent = `我的今日菜单：${menuData.join(', ')}`;
+            if (navigator.share) {
+                navigator.share({
+                    title: '我的健康菜单',
+                    text: shareContent
+                });
+            } else {
+                alert('分享内容已复制到剪贴板');
+                navigator.clipboard.writeText(shareContent);
+            }
+        }
+
+        // 初始化显示
+        updateMenuDisplay();
+    </script>
+</body>
+</html>
+菜单</h2>
+            <div class="menu-actions">
+                <button class="btn-confirm" onclick="confirmMenu()">最终确认菜单</button>
+            </div>
+            <div class="menu-grid" id="myMenu"></div>
+        </div>
+    </div>
+
+    <script src="my_recipe.js"></script>
+</body>
+</html>

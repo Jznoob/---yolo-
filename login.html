@@ -1,111 +1,150 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>用户登录</title>
-    <style>
-        body {
-            font-family: 'Microsoft YaHei', sans-serif;
-            background: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .login-container {
-            background: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            width: 350px;
-        }
-
-        .form-title {
-            text-align: center;
-            color: #2d3436;
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        input {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        button {
-            width: 100%;
-            padding: 0.8rem;
-            background: #1890ff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .links {
-            text-align: center;
-            margin-top: 1rem;
-        }
-
-        .links a {
-            color: #1890ff;
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-    </style>
+    <title>登录 - 味知镜头</title>
+    <link rel="stylesheet" href="auth.css">
+    <link rel="stylesheet" href="food-particles.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 </head>
+
 <body>
+    <div class="food-particles" id="foodParticles"></div>
+
     <div class="login-container">
-        <h2 class="form-title">用户登录</h2>
+        <h2 class="form-title">欢迎回来</h2>
+        <p class="description">登录您的账号，开启美食探索之旅</p>
+
         <form id="loginForm" onsubmit="return handleLogin(event)">
             <div class="form-group">
-                <input type="text" id="username" placeholder="用户名/手机号" required>
+                <input type="text" id="username" placeholder="用户名/邮箱" required>
             </div>
             <div class="form-group">
                 <input type="password" id="password" placeholder="密码" required>
             </div>
+            <div class="form-group" style="display: none;" id="verificationGroup">
+                <div class="verification-code">
+                    <input type="text" id="verificationCode" placeholder="验证码">
+                    <button type="button" onclick="refreshVerificationCode()">
+                        <img id="verificationImage" src="/get-verification-code" alt="验证码">
+                    </button>
+                </div>
+            </div>
             <button type="submit">登录</button>
         </form>
+
+        <div class="social-login">
+            <div class="social-login-title">
+                <span>其他登录方式</span>
+            </div>
+            <div class="social-buttons">
+                <div class="social-button" onclick="socialLogin('wechat')">
+                    <i class="ri-wechat-line"></i>
+                </div>
+                <div class="social-button" onclick="socialLogin('qq')">
+                    <i class="ri-qq-line"></i>
+                </div>
+                <div class="social-button" onclick="socialLogin('weibo')">
+                    <i class="ri-weibo-line"></i>
+                </div>
+            </div>
+        </div>
+
         <div class="links">
-            <a href="forgot_password.html">忘记密码?</a>
-            <span style="margin:0 10px">|</span>
+            <a href="forgot-password.html">忘记密码？</a>
+            <span class="separator">|</span>
             <a href="register.html">注册新账号</a>
         </div>
-        <div id="message" style="color:#ff4d4f; margin-top:1rem;"></div>
+
+        <div id="message" class="error-message"></div>
     </div>
 
     <script>
-        async function handleLogin(event) {
-            event.preventDefault();
-            
-            const response = await fetch('/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    username: document.getElementById('username').value,
-                    password: document.getElementById('password').value
-                })
-            });
+        // 创建食物粒子
+        function createFoodParticles() {
+            const container = document.getElementById('foodParticles');
+            const particleCount = 15;
 
-            const result = await response.json();
-            
-            if(result.code === 1) {
-                window.location.href = 'menu.html';
-            } else {
-                document.getElementById('message').textContent = result.msg;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'food-particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                container.appendChild(particle);
             }
         }
+
+        // 刷新验证码
+        function refreshVerificationCode() {
+            const img = document.getElementById('verificationImage');
+            img.src = '/get-verification-code?' + new Date().getTime();
+        }
+
+        // 处理登录
+        let loginAttempts = 0;
+
+        async function handleLogin(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const verificationCode = document.getElementById('verificationCode')?.value;
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username,
+                        password,
+                        verificationCode
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.code === 1) {
+                    // 登录成功
+                    localStorage.setItem('token', result.data.token);
+                    showMessage('登录成功！正在跳转...', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'menu.html';
+                    }, 1000);
+                } else {
+                    // 登录失败
+                    loginAttempts++;
+                    if (loginAttempts >= 3) {
+                        // 显示验证码
+                        document.getElementById('verificationGroup').style.display = 'block';
+                        refreshVerificationCode();
+                    }
+                    showMessage(result.msg || '登录失败，请检查用户名和密码');
+                }
+            } catch (error) {
+                showMessage('登录失败，请稍后重试');
+            }
+        }
+
+        // 社交账号登录
+        function socialLogin(platform) {
+            // 根据不同平台处理第三方登录
+            console.log(`使用 ${platform} 登录`);
+        }
+
+        // 显示消息
+        function showMessage(msg, type = 'error') {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = msg;
+            messageDiv.style.color = type === 'success' ? '#52c41a' : '#ff4d4f';
+        }
+
+        // 页面加载时创建食物粒子
+        window.addEventListener('load', createFoodParticles);
     </script>
 </body>
+
 </html>

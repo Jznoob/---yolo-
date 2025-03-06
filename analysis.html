@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>饮食分析 - 味知镜头</title>
+  <link rel="stylesheet" href="analysis.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <!-- 引入图表库 -->
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+</head>
+
+<body>
+  <div class="analysis-container">
+    <!-- 时间范围选择 -->
+    <div class="time-filter">
+      <button class="time-btn active" data-range="week">本周</button>
+      <button class="time-btn" data-range="month">本月</button>
+      <button class="time-btn" data-range="year">本年</button>
+      <div class="custom-date">
+        <input type="date" id="startDate">
+        <span>至</span>
+        <input type="date" id="endDate">
+        <button class="apply-btn">应用</button>
+      </div>
+    </div>
+
+    <!-- 营养摄入概览 -->
+    <div class="overview-cards">
+      <div class="card">
+        <div class="card-icon"><i class="ri-heart-pulse-line"></i></div>
+        <div class="card-content">
+          <h3>平均热量</h3>
+          <p class="value">2186</p>
+          <p class="unit">kcal/天</p>
+          <p class="trend up">+5.2% vs 上周</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="ri-scales-3-line"></i></div>
+        <div class="card-content">
+          <h3>蛋白质</h3>
+          <p class="value">76</p>
+          <p class="unit">g/天</p>
+          <p class="trend down">-2.1% vs 上周</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="ri-drop-line"></i></div>
+        <div class="card-content">
+          <h3>脂肪</h3>
+          <p class="value">65</p>
+          <p class="unit">g/天</p>
+          <p class="trend up">+3.8% vs 上周</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="ri-bubble-chart-line"></i></div>
+        <div class="card-content">
+          <h3>碳水化合物</h3>
+          <p class="value">284</p>
+          <p class="unit">g/天</p>
+          <p class="trend normal">持平</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 图表区域 -->
+    <div class="charts-container">
+      <!-- 营养摄入趋势 -->
+      <div class="chart-card">
+        <h3>营养摄入趋势</h3>
+        <div class="chart" id="nutritionTrend"></div>
+      </div>
+
+      <!-- 食物类别分布 -->
+      <div class="chart-card">
+        <h3>食物类别分布</h3>
+        <div class="chart" id="foodCategories"></div>
+      </div>
+
+      <!-- 营养素平衡分析 -->
+      <div class="chart-card">
+        <h3>营养素平衡分析</h3>
+        <div class="chart" id="nutritionBalance"></div>
+      </div>
+
+      <!-- 饮食习惯分析 -->
+      <div class="chart-card">
+        <h3>饮食习惯分析</h3>
+        <div class="chart" id="eatingHabits"></div>
+      </div>
+    </div>
+
+    <!-- 健康建议 -->
+    <div class="recommendations">
+      <h3>健康建议</h3>
+      <div class="recommendation-cards">
+        <div class="rec-card">
+          <i class="ri-alert-line warning"></i>
+          <div class="rec-content">
+            <h4>蛋白质摄入不足</h4>
+            <p>建议增加瘦肉、鱼类、蛋类的摄入</p>
+          </div>
+        </div>
+        <div class="rec-card">
+          <i class="ri-thumb-up-line success"></i>
+          <div class="rec-content">
+            <h4>膳食纤维达标</h4>
+            <p>继续保持蔬菜水果的摄入量</p>
+          </div>
+        </div>
+        <div class="rec-card">
+          <i class="ri-information-line info"></i>
+          <div class="rec-content">
+            <h4>饮水量偏低</h4>
+            <p>建议每天饮水不少于2000ml</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 初始化图表
+    function initCharts() {
+      // 营养摄入趋势图
+      const nutritionTrend = echarts.init(document.getElementById('nutritionTrend'));
+      nutritionTrend.setOption({
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {
+          data: ['热量', '蛋白质', '脂肪', '碳水']
+        },
+        xAxis: {
+          type: 'category',
+          data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [
+          {
+            name: '热量',
+            type: 'line',
+            smooth: true,
+            data: [2100, 2300, 2000, 2400, 2200, 2600, 2150]
+          },
+          {
+            name: '蛋白质',
+            type: 'line',
+            smooth: true,
+            data: [75, 80, 70, 85, 75, 90, 78]
+          },
+          {
+            name: '脂肪',
+            type: 'line',
+            smooth: true,
+            data: [60, 70, 55, 75, 65, 80, 62]
+          },
+          {
+            name: '碳水',
+            type: 'line',
+            smooth: true,
+            data: [280, 300, 260, 320, 290, 340, 285]
+          }
+        ]
+      });
+
+      // 食物类别分布图
+      const foodCategories = echarts.init(document.getElementById('foodCategories'));
+      foodCategories.setOption({
+        tooltip: {
+          trigger: 'item'
+        },
+        legend: {
+          orient: 'vertical',
+          left: 'left'
+        },
+        series: [
+          {
+            name: '食物类别',
+            type: 'pie',
+            radius: '50%',
+            data: [
+              { value: 35, name: '谷物类' },
+              { value: 25, name: '蛋白质类' },
+              { value: 20, name: '蔬菜类' },
+              { value: 10, name: '水果类' },
+              { value: 10, name: '油脂类' }
+            ],
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            }
+          }
+        ]
+      });
+
+      // 营养素平衡分析图
+      const nutritionBalance = echarts.init(document.getElementById('nutritionBalance'));
+      nutritionBalance.setOption({
+        radar: {
+          indicator: [
+            { name: '蛋白质', max: 100 },
+            { name: '脂肪', max: 100 },
+            { name: '碳水', max: 100 },
+            { name: '维生素', max: 100 },
+            { name: '矿物质', max: 100 },
+            { name: '膳食纤维', max: 100 }
+          ]
+        },
+        series: [{
+          type: 'radar',
+          data: [
+            {
+              value: [80, 70, 90, 85, 75, 65],
+              name: '当前摄入',
+              areaStyle: {
+                color: 'rgba(255, 107, 107, 0.2)'
+              }
+            },
+            {
+              value: [90, 80, 85, 90, 85, 80],
+              name: '推荐摄入',
+              lineStyle: {
+                type: 'dashed'
+              }
+            }
+          ]
+        }]
+      });
+
+      // 饮食习惯分析图
+      const eatingHabits = echarts.init(document.getElementById('eatingHabits'));
+      eatingHabits.setOption({
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow'
+          }
+        },
+        xAxis: {
+          type: 'category',
+          data: ['早餐', '上午加餐', '午餐', '下午加餐', '晚餐', '夜宵']
+        },
+        yAxis: {
+          type: 'value',
+          name: '热量(kcal)'
+        },
+        series: [{
+          data: [500, 200, 800, 300, 600, 100],
+          type: 'bar',
+          itemStyle: {
+            color: function (params) {
+              const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD', '#D4A5A5'];
+              return colors[params.dataIndex];
+            }
+          }
+        }]
+      });
+    }
+
+    // 页面加载完成后初始化图表
+    window.addEventListener('load', initCharts);
+
+    // 窗口大小改变时重绘图表
+    window.addEventListener('resize', function () {
+      const charts = document.querySelectorAll('.chart');
+      charts.forEach(chart => {
+        echarts.getInstanceByDom(chart)?.resize();
+      });
+    });
+  </script>
+</body>
+
+</html>

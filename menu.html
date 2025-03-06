@@ -1,12 +1,20 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>食谱推荐系统</title>
     <link rel="stylesheet" href="menu.css">
+    <link rel="stylesheet" href="header-new.css">
+    <link rel="stylesheet" href="food-particles.css">
+    <!-- 添加图标库 -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 </head>
+
 <body>
+    <div class="food-particles" id="foodParticles"></div>
+
     <header class="main-header">
         <h1 class="logo">味知镜头</h1>
         <nav class="main-nav">
@@ -14,9 +22,58 @@
                 <li><a href="recommend.html" class="nav-item active" data-target="recommend">食谱推荐</a></li>
                 <li><a href="my_recipe.html" class="nav-item" data-target="my_recipe">我的菜单</a></li>
                 <li><a href="daily_record.html" class="nav-item" data-target="daily_record">每日记录</a></li>
-                <li><a href="my_account.html" class="nav-item" data-target="my_account">个人中心</a></li>
             </ul>
         </nav>
+        <div class="user-section">
+            <div class="avatar-container" id="avatarContainer" onclick="handleAvatarClick()">
+                <!-- 未登录时显示默认头像图标 -->
+                <div class="avatar-wrapper">
+                    <i class="ri-user-3-line default-avatar" id="defaultAvatar"></i>
+                </div>
+
+                <div class="user-dropdown">
+                    <!-- 未登录时显示 -->
+                    <div id="notLoginMenu">
+                        <a href="#" class="dropdown-item" onclick="showLoginModal()">
+                            <i class="ri-login-circle-line"></i>
+                            登录
+                        </a>
+                        <a href="register.html" class="dropdown-item">
+                            <i class="ri-user-add-line"></i>
+                            注册
+                        </a>
+                    </div>
+                    <!-- 登录后显示 -->
+                    <div id="loginMenu" style="display: none;">
+                        <div class="user-info">
+                            <p class="user-name" id="userName">加载中...</p>
+                            <p class="user-email" id="userEmail">loading...</p>
+                        </div>
+                        <a href="my_account.html" class="dropdown-item">
+                            <i class="ri-user-settings-line"></i>
+                            个人中心
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <i class="ri-heart-line"></i>
+                            我的收藏
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <i class="ri-history-line"></i>
+                            浏览历史
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                            <i class="ri-settings-3-line"></i>
+                            设置
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="handleLogout()">
+                            <i class="ri-logout-circle-r-line"></i>
+                            退出登录
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </header>
 
     <main class="content-container" id="main-content">
@@ -27,6 +84,137 @@
         <iframe src="my_account.html" frameborder="0" class="content-frame" id="my_account"></iframe>
     </main>
 
+    <!-- 登录模态框 -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeLoginModal()">&times;</span>
+            <h2>欢迎回来</h2>
+            <form id="loginForm" onsubmit="return handleLogin(event)">
+                <div class="form-group">
+                    <input type="text" id="username" placeholder="用户名/邮箱" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" placeholder="密码" required>
+                </div>
+                <button type="submit" class="login-button">登录</button>
+            </form>
+            <div class="modal-links">
+                <a href="register.html">注册新账号</a>
+                <span class="separator">|</span>
+                <a href="forgot-password.html">忘记密码？</a>
+            </div>
+        </div>
+    </div>
+
     <script src="menu.js"></script>
+    <script>
+        // 创建食物粒子
+        function createFoodParticles() {
+            const container = document.getElementById('foodParticles');
+            const particleCount = 15;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'food-particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // 页面加载时创建食物粒子
+        window.addEventListener('load', createFoodParticles);
+
+        // 检查登录状态
+        function checkLoginStatus() {
+            const token = localStorage.getItem('token');
+            if (token) {
+                // 已登录
+                document.getElementById('loginButton').style.display = 'none';
+                document.getElementById('avatarContainer').style.display = 'block';
+
+                // 获取用户信息
+                fetchUserInfo();
+            } else {
+                // 未登录
+                document.getElementById('loginButton').style.display = 'block';
+                document.getElementById('avatarContainer').style.display = 'none';
+            }
+        }
+
+        // 获取用户信息
+        async function fetchUserInfo() {
+            try {
+                const response = await fetch('/api/user/info', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                const data = await response.json();
+
+                if (data.code === 1) {
+                    document.getElementById('userName').textContent = data.data.username;
+                    document.getElementById('userEmail').textContent = data.data.email;
+                    if (data.data.avatar) {
+                        document.getElementById('userAvatar').src = data.data.avatar;
+                    }
+                }
+            } catch (error) {
+                console.error('获取用户信息失败:', error);
+            }
+        }
+
+        // 显示登录模态框
+        function showLoginModal() {
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+
+        // 关闭登录模态框
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+
+        // 处理登录
+        async function handleLogin(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (data.code === 1) {
+                    localStorage.setItem('token', data.data.token);
+                    closeLoginModal();
+                    checkLoginStatus();
+                } else {
+                    alert(data.msg || '登录失败');
+                }
+            } catch (error) {
+                console.error('登录失败:', error);
+                alert('登录失败，请稍后重试');
+            }
+        }
+
+        // 处理退出登录
+        function handleLogout() {
+            localStorage.removeItem('token');
+            checkLoginStatus();
+            window.location.reload();
+        }
+
+        // 页面加载时检查登录状态
+        window.addEventListener('load', checkLoginStatus);
+    </script>
 </body>
+
 </html>

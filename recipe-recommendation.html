@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>食谱推荐 - 味知镜头</title>
+  <link rel="stylesheet" href="recipe-recommendation.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="recommendation-container">
+    <!-- 智能推荐区域 -->
+    <section class="smart-recommendation">
+      <h2>今日推荐</h2>
+      <div class="recommendation-cards">
+        <div class="recommendation-card">
+          <div class="card-header">
+            <i class="ri-heart-pulse-line"></i>
+            <h3>营养均衡套餐</h3>
+          </div>
+          <div class="card-content">
+            <div class="meal-plan">
+              <div class="meal-item">
+                <span class="meal-time">早餐</span>
+                <p>全麦面包 + 牛奶 + 水煮蛋</p>
+                <div class="nutrition-info">
+                  <span>热量: 350kcal</span>
+                  <span>蛋白质: 15g</span>
+                </div>
+              </div>
+              <div class="meal-item">
+                <span class="meal-time">午餐</span>
+                <p>糙米饭 + 清炒西兰花 + 煎鸡胸肉</p>
+                <div class="nutrition-info">
+                  <span>热量: 450kcal</span>
+                  <span>蛋白质: 25g</span>
+                </div>
+              </div>
+              <div class="meal-item">
+                <span class="meal-time">晚餐</span>
+                <p>藜麦沙拉 + 烤三文鱼</p>
+                <div class="nutrition-info">
+                  <span>热量: 400kcal</span>
+                  <span>蛋白质: 22g</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 食材购买建议 -->
+    <section class="shopping-suggestion">
+      <h2>本周食材清单</h2>
+      <div class="shopping-list">
+        <div class="category">
+          <h3><i class="ri-plant-line"></i>蔬菜水果</h3>
+          <ul>
+            <li>
+              <span class="item-name">西兰花</span>
+              <span class="item-amount">300g</span>
+              <span class="item-price">¥4.5</span>
+            </li>
+            <li>
+              <span class="item-name">胡萝卜</span>
+              <span class="item-amount">200g</span>
+              <span class="item-price">¥2.0</span>
+            </li>
+            <li>
+              <span class="item-name">生菜</span>
+              <span class="item-amount">200g</span>
+              <span class="item-price">¥3.0</span>
+            </li>
+          </ul>
+        </div>
+        <div class="category">
+          <h3><i class="ri-meat-line"></i>肉类海鲜</h3>
+          <ul>
+            <li>
+              <span class="item-name">鸡胸肉</span>
+              <span class="item-amount">500g</span>
+              <span class="item-price">¥15.0</span>
+            </li>
+            <li>
+              <span class="item-name">三文鱼</span>
+              <span class="item-amount">300g</span>
+              <span class="item-price">¥45.0</span>
+            </li>
+          </ul>
+        </div>
+        <div class="category">
+          <h3><i class="ri-seedling-line"></i>主食杂粮</h3>
+          <ul>
+            <li>
+              <span class="item-name">全麦面包</span>
+              <span class="item-amount">1袋</span>
+              <span class="item-price">¥12.0</span>
+            </li>
+            <li>
+              <span class="item-name">糙米</span>
+              <span class="item-amount">1kg</span>
+              <span class="item-price">¥15.0</span>
+            </li>
+            <li>
+              <span class="item-name">藜麦</span>
+              <span class="item-amount">200g</span>
+              <span class="item-price">¥20.0</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="total-price">
+        <span>预计总价：</span>
+        <strong>¥116.5</strong>
+      </div>
+      <button class="generate-list">生成购物清单</button>
+    </section>
+
+    <!-- 美食杂志和视频 -->
+    <section class="food-content">
+      <h2>美食灵感</h2>
+      <div class="content-tabs">
+        <button class="tab-btn active" data-tab="magazine">美食杂志</button>
+        <button class="tab-btn" data-tab="video">美食视频</button>
+      </div>
+
+      <!-- 杂志内容 -->
+      <div class="magazine-content tab-content active" id="magazine">
+        <div class="magazine-grid">
+          <article class="magazine-item">
+            <img src="magazine-1.jpg" alt="健康轻食">
+            <div class="magazine-info">
+              <h4>健康轻食特辑</h4>
+              <p>探索低卡路里的美味世界</p>
+              <span class="date">2024年3月刊</span>
+            </div>
+          </article>
+          <article class="magazine-item">
+            <img src="magazine-2.jpg" alt="世界美食">
+            <div class="magazine-info">
+              <h4>环球美食之旅</h4>
+              <p>带你品味各国特色料理</p>
+              <span class="date">2024年2月刊</span>
+            </div>
+          </article>
+          <article class="magazine-item">
+            <img src="magazine-3.jpg" alt="烘焙艺术">
+            <div class="magazine-info">
+              <h4>烘焙艺术</h4>
+              <p>甜点制作的秘密配方</p>
+              <span class="date">2024年1月刊</span>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- 视频内容 -->
+      <div class="video-content tab-content" id="video">
+        <div class="video-grid">
+          <article class="video-item">
+            <div class="video-thumbnail">
+              <img src="video-1.jpg" alt="早餐食谱">
+              <span class="duration">05:32</span>
+              <i class="ri-play-circle-line play-icon"></i>
+            </div>
+            <div class="video-info">
+              <h4>10分钟快手早餐</h4>
+              <p>营养美味的健康早餐食谱</p>
+              <div class="video-stats">
+                <span><i class="ri-eye-line"></i> 12.5k</span>
+                <span><i class="ri-thumb-up-line"></i> 1.2k</span>
+              </div>
+            </div>
+          </article>
+          <article class="video-item">
+            <div class="video-thumbnail">
+              <img src="video-2.jpg" alt="午餐食谱">
+              <span class="duration">08:15</span>
+              <i class="ri-play-circle-line play-icon"></i>
+            </div>
+            <div class="video-info">
+              <h4>办公室午餐食谱</h4>
+              <p>简单美味的工作日午餐</p>
+              <div class="video-stats">
+                <span><i class="ri-eye-line"></i> 8.7k</span>
+                <span><i class="ri-thumb-up-line"></i> 956</span>
+              </div>
+            </div>
+          </article>
+          <article class="video-item">
+            <div class="video-thumbnail">
+              <img src="video-3.jpg" alt="晚餐食谱">
+              <span class="duration">12:45</span>
+              <i class="ri-play-circle-line play-icon"></i>
+            </div>
+            <div class="video-info">
+              <h4>家常晚餐合集</h4>
+              <p>一周美味晚餐计划</p>
+              <div class="video-stats">
+                <span><i class="ri-eye-line"></i> 15.3k</span>
+                <span><i class="ri-thumb-up-line"></i> 1.8k</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // 切换标签页
+    document.querySelectorAll('.tab-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        // 移除所有活动状态
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+        // 添加新的活动状态
+        button.classList.add('active');
+        document.getElementById(button.dataset.tab).classList.add('active');
+      });
+    });
+
+    // 生成购物清单
+    document.querySelector('.generate-list').addEventListener('click', () => {
+      // 这里可以添加生成购物清单的逻辑
+      alert('购物清单已生成，请在手机APP中查看！');
+    });
+  </script>
+</body>
+
+</html>

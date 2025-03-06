@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>今日食材拍摄</title>
+  <style>
+    .capture-container {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      max-width: 800px;
+      margin: 2rem auto;
+    }
+
+    .capture-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+
+    .capture-title {
+      font-size: 1.5rem;
+      color: #333;
+      margin: 0;
+    }
+
+    .capture-date {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .camera-container {
+      position: relative;
+      width: 100%;
+      height: 400px;
+      background: #f5f5f5;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+
+    #videoElement {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .camera-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .capture-button {
+      background: #FF6B6B;
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .capture-button:hover {
+      background: #FF5252;
+      transform: translateY(-2px);
+    }
+
+    .capture-button i {
+      font-size: 1.5rem;
+    }
+
+    .preview-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .preview-item {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      aspect-ratio: 1;
+    }
+
+    .preview-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .preview-actions {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .preview-item:hover .preview-actions {
+      opacity: 1;
+    }
+
+    .action-button {
+      background: white;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      margin: 0 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .action-button:hover {
+      transform: scale(1.1);
+    }
+
+    .action-button i {
+      font-size: 1.2rem;
+      color: #333;
+    }
+
+    .delete-button i {
+      color: #FF6B6B;
+    }
+
+    .tips-container {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: #FFF3E0;
+      border-radius: 10px;
+    }
+
+    .tips-title {
+      color: #FF6B6B;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .tips-list {
+      margin: 0;
+      padding-left: 1.5rem;
+      color: #666;
+    }
+
+    .tips-list li {
+      margin-bottom: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .camera-container {
+        height: 300px;
+      }
+
+      .preview-container {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      }
+    }
+  </style>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="capture-container">
+    <div class="capture-header">
+      <h2 class="capture-title">今日食材拍摄</h2>
+      <span class="capture-date" id="currentDate"></span>
+    </div>
+
+    <div class="camera-container">
+      <video id="videoElement" autoplay playsinline></video>
+      <div class="camera-overlay">
+        <button class="capture-button" onclick="captureImage()">
+          <i class="ri-camera-line"></i>
+          拍摄食材
+        </button>
+      </div>
+    </div>
+
+    <div class="preview-container" id="previewContainer">
+      <!-- 预览图片将在这里动态添加 -->
+    </div>
+
+    <div class="tips-container">
+      <h3 class="tips-title">拍摄小贴士</h3>
+      <ul class="tips-list">
+        <li>请确保拍摄环境光线充足</li>
+        <li>尽量将食材放置在纯色背景下</li>
+        <li>保持食材的完整性，避免遮挡</li>
+        <li>可以多角度拍摄以便更好识别</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // 初始化日期显示
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('zh-CN', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      weekday: 'long'
+    });
+
+    // 初始化摄像头
+    async function initCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const video = document.getElementById('videoElement');
+        video.srcObject = stream;
+      } catch (err) {
+        console.error('摄像头访问失败:', err);
+        alert('无法访问摄像头，请确保已授予摄像头权限。');
+      }
+    }
+
+    // 拍摄照片
+    function captureImage() {
+      const video = document.getElementById('videoElement');
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext('2d').drawImage(video, 0, 0);
+
+      // 创建预览元素
+      const previewContainer = document.getElementById('previewContainer');
+      const previewItem = document.createElement('div');
+      previewItem.className = 'preview-item';
+      previewItem.innerHTML = `
+                <img src="${canvas.toDataURL('image/jpeg')}" class="preview-image" alt="食材照片">
+                <div class="preview-actions">
+                    <button class="action-button" onclick="retakePhoto(this)">
+                        <i class="ri-refresh-line"></i>
+                    </button>
+                    <button class="action-button delete-button" onclick="deletePhoto(this)">
+                        <i class="ri-delete-bin-line"></i>
+                    </button>
+                </div>
+            `;
+      previewContainer.appendChild(previewItem);
+    }
+
+    // 重新拍摄
+    function retakePhoto(button) {
+      button.closest('.preview-item').remove();
+    }
+
+    // 删除照片
+    function deletePhoto(button) {
+      button.closest('.preview-item').remove();
+    }
+
+    // 页面加载时初始化摄像头
+    window.addEventListener('load', initCamera);
+  </script>
+</body>
+
+</html>
